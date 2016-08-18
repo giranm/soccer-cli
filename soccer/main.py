@@ -13,6 +13,10 @@ BASE_URL = 'http://api.football-data.org/alpha/'
 LIVE_URL = 'http://soccer-cli.appspot.com/'
 LEAGUE_IDS = leagueids.LEAGUE_IDS
 
+# Define proxy for outgoing REST calls.
+proxy = {
+    "http": "http://gateway.zscalertwo.net:80"
+}
 
 def load_json(file):
     """Load JSON file at app start"""
@@ -76,7 +80,7 @@ def load_config_key():
 
 def _get(url):
     """Handles api.football-data.org requests"""
-    req = requests.get(BASE_URL+url, headers=headers)
+    req = requests.get(BASE_URL+url, headers=headers, proxies=proxy)
 
     if req.status_code == requests.codes.ok:
         return req
@@ -96,7 +100,7 @@ def _get(url):
 
 def get_live_scores(writer, use_12_hour_format):
     """Gets the live scores"""
-    req = requests.get(LIVE_URL)
+    req = requests.get(LIVE_URL, proxies=proxy)
     if req.status_code == requests.codes.ok:
         scores = req.json()
         if len(scores["games"]) == 0:
